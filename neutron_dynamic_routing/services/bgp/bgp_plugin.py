@@ -54,7 +54,12 @@ class BgpPlugin(service_base.ServicePluginBase,
             cfg.CONF.bgp_drscheduler_driver)
         self._setup_rpc()
         self._register_callbacks()
-        self.add_periodic_dragent_status_check()
+
+        if cfg.CONF.allow_automatic_dragent_failover:
+            self.add_periodic_dragent_status_check()
+        else:
+            LOG.info("Skipping periodic DrAgent status check because "
+                     "automatic rescheduling is disabled.")
 
     def get_plugin_type(self):
         return bgp_ext.BGP_EXT_ALIAS

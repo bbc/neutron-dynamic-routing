@@ -40,7 +40,15 @@ BGP_DRAGENT_SCHEDULER_OPTS = [
         'bgp_drscheduler_driver',
         default='neutron_dynamic_routing.services.bgp.scheduler'
                 '.bgp_dragent_scheduler.ChanceScheduler',
-        help=_('Driver used for scheduling BGP speakers to BGP DrAgent'))
+        help=_('Driver used for scheduling BGP speakers to BGP DrAgent')),
+    cfg.BoolOpt(
+        'allow_automatic_dragent_failover',
+        default=True,
+        help=_('Automatically remove BGP speakers from offline DrAgents.')),
+    cfg.BoolOpt(
+        'allow_automatic_bgp_speaker_scheduling',
+        default=True,
+        help=_('Automatically schedule new BGP speakers on DrAgents.'))
 ]
 
 cfg.CONF.register_opts(BGP_DRAGENT_SCHEDULER_OPTS)

@@ -18,6 +18,7 @@ from neutron_lib.callbacks import registry
 from neutron_lib import context as nl_context
 from neutron_lib.db import api as db_api
 from neutron_lib.objects import registry as obj_reg
+from oslo_config import cfg
 from oslo_db import exception as db_exc
 from oslo_log import log as logging
 from sqlalchemy import sql
@@ -129,9 +130,10 @@ class BgpDrAgentFilter(base_resource_filter.BaseResourceFilter):
 class BgpDrAgentSchedulerBase(BgpDrAgentFilter):
 
     def _register_callbacks(self):
-        registry.subscribe(self.schedule_bgp_speaker_callback,
-                           dr_resources.BGP_SPEAKER,
-                           events.AFTER_CREATE)
+        if cfg.CONF.allow_automatic_bgp_speaker_scheduling:
+            registry.subscribe(self.schedule_bgp_speaker_callback,
+                            dr_resources.BGP_SPEAKER,
+                            events.AFTER_CREATE)
 
     def schedule_all_unscheduled_bgp_speakers(self, context):
         """Call schedule_unscheduled_bgp_speakers for all hosts.
